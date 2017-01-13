@@ -4,9 +4,23 @@ import CSSTransitionGroup from 'react-addons-css-transition-group';
 import cn from 'classnames';
 import deprecated from 'react-prop-types/lib/deprecated';
 
+import reduceProps from '../utils/reduceProps';
 import contextTypes from './contextTypes';
 import Positions from './Positions';
 import List from '../Lists/List';
+
+const REMOVED_KEYS = [
+  'onClose',
+  'cascading',
+  'listId',
+
+  // deprecated
+  'close',
+  'autoclose',
+  'limitHeight',
+  'expanderIconClassName',
+  'expanderIconChildren',
+];
 
 /**
  * The `Menu` component is a controlled component that will display
@@ -268,13 +282,9 @@ export default class Menu extends PureComponent {
       contained,
       children,
       position,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.close;
-    delete props.onClose;
-    delete props.cascading;
-    delete props.autoclose;
-    delete props.listId;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     let { listId } = this.props;
     if (!listId && id) {

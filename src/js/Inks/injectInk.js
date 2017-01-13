@@ -1,7 +1,10 @@
 import React, { PureComponent, PropTypes } from 'react';
 
-import InkContainer from './InkContainer';
+import reduceProps from '../utils/reduceProps';
 import getDisplayName from '../utils/StringUtils/getDisplayName';
+import InkContainer from './InkContainer';
+
+const REMOVED_KEYS = ['__SUPER_SECRET_REF__'];
 
 /**
  * Takes any component and injects an ink container for having the Material Design Ink effect.
@@ -197,9 +200,9 @@ export default ComposedComponent => class InkedComponent extends PureComponent {
       inkContainerClassName,
       disabledInteractions,
       waitForInkTransition,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.__SUPER_SECRET_REF__;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     if (!(props.disabled || inkDisabled)) {
       props.ink = (

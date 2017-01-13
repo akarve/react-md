@@ -1,8 +1,11 @@
 import React, { PureComponent, PropTypes } from 'react';
 import cn from 'classnames';
 
+import reduceProps from '../utils/reduceProps';
 import AccessibleFakeInkedButton from '../Helpers/AccessibleFakeInkedButton';
 import TileAddon from '../Lists/TileAddon';
+
+const REMOVED_KEYS = ['defaultOpen'];
 
 export default class MiniListItem extends PureComponent {
   static propTypes = {
@@ -99,9 +102,10 @@ export default class MiniListItem extends PureComponent {
       leftAvatar,
       active,
       activeClassName,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.defaultOpen;
+    const props = reduceProps(remaining, REMOVED_KEYS);
+
     return (
       <li style={style} className={className}>
         <AccessibleFakeInkedButton

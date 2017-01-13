@@ -6,6 +6,7 @@ import deprecated from 'react-prop-types/lib/deprecated';
 
 import { ESC, ENTER } from '../constants/keyCodes';
 import getField from '../utils/getField';
+import reduceProps from '../utils/reduceProps';
 import controlled from '../utils/PropTypes/controlled';
 import isDateEqual from '../utils/DateUtils/isDateEqual';
 import addDate from '../utils/DateUtils/addDate';
@@ -16,6 +17,21 @@ import FontIcon from '../FontIcons/FontIcon';
 import TextField from '../TextFields/TextField';
 import Dialog from '../Dialogs/DialogContainer';
 import DatePicker from './DatePicker';
+
+const REMOVED_KEYS = [
+  'value',
+  'onChange',
+  'visible',
+  'onVisibilityToggle',
+  'defaultValue',
+  'defaultVisible',
+
+  // deprecated
+  'initiallyOpen',
+  'adjustMinWidth',
+  'nextIcon',
+  'previousIcon',
+];
 
 /**
  * The `DatePickerContainer` component is a wrapper for the main `DatePicker` component
@@ -638,20 +654,9 @@ export default class DatePickerContainer extends PureComponent {
       closeOnEsc,
       'aria-label': ariaLabel,
       isOpen, // deprecated
-      ...props
+      ...remaining
     } = this.props;
-    delete props.value;
-    delete props.onChange;
-    delete props.visible;
-    delete props.onVisibilityToggle;
-    delete props.defaultValue;
-    delete props.defaultVisible;
-
-    // Delete deprecated
-    delete props.initiallyOpen;
-    delete props.adjustMinWidth;
-    delete props.nextIcon;
-    delete props.previousIcon;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     const visible = typeof isOpen !== 'undefined'
       ? isOpen

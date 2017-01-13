@@ -5,6 +5,7 @@ import isRequiredForA11y from 'react-prop-types/lib/isRequiredForA11y';
 
 import { DESKTOP_MIN_WIDTH } from '../constants/media';
 import getField from '../utils/getField';
+import reduceProps from '../utils/reduceProps';
 import controlled from '../utils/PropTypes/controlled';
 import TabIndicator from './TabIndicator';
 import IconSeparator from '../Helpers/IconSeparator';
@@ -16,6 +17,14 @@ const MOBILE_PADDING = 72;
 const DESKTOP_PADDING = 80;
 const MOBILE_TAB_MIN_WIDTH = 72;
 const DESKTOP_TAB_MIN_WIDTH = 160;
+
+const REMOVED_KEYS = [
+  'activeTabIndex',
+  'defaultTabIndex',
+  'defaultMedia',
+  'desktopMinWidth',
+  'onTabChange',
+];
 
 
 /**
@@ -436,13 +445,9 @@ export default class Tabs extends PureComponent {
       nextIconClassName,
       previousIconChildren,
       previousIconClassName,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.activeTabIndex;
-    delete props.defaultTabIndex;
-    delete props.defaultMedia;
-    delete props.desktopMinWidth;
-    delete props.onTabChange;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     const activeTabIndex = getField(this.props, this.state, 'activeTabIndex');
 

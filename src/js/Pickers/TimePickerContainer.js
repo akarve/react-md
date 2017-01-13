@@ -6,6 +6,7 @@ import deprecated from 'react-prop-types/lib/deprecated';
 
 import { ESC, ENTER } from '../constants/keyCodes';
 import getField from '../utils/getField';
+import reduceProps from '../utils/reduceProps';
 import controlled from '../utils/PropTypes/controlled';
 import DateTimeFormat from '../utils/DateUtils/DateTimeFormat';
 import formatTime from '../utils/DateUtils/formatTime';
@@ -15,6 +16,20 @@ import FontIcon from '../FontIcons/FontIcon';
 import TextField from '../TextFields/TextField';
 import Collapse from '../Helpers/Collapse';
 import TimePicker from './TimePicker';
+
+const REMOVED_KEYS = [
+  'value',
+  'onVisibilityChange',
+  'onChange',
+  'defaultValue',
+  'defaultVisible',
+  'defaultTimeMode',
+
+  // deprecated
+  'isOpen',
+  'initialTimeMode',
+  'initiallyOpen',
+];
 
 /**
  * The `TimePickerContainer` component is a wrapper for the main `TimePicker` component
@@ -388,9 +403,9 @@ export default class TimePickerContainer extends PureComponent {
       this.props.onVisibilityChange(false, e);
     }
 
-    const state = { visible: false, tempTime: this.state.time };
-    if (typeof this.props.isOpen !== 'undefined' || typeof this.props.visible !== 'undefined') {
-      delete state.visible;
+    const state = { tempTime: this.state.time };
+    if (typeof this.props.isOpen === 'undefined' && typeof this.props.visible === 'undefined') {
+      state.visible = false;
     }
 
     this.setState(state);
@@ -434,19 +449,9 @@ export default class TimePickerContainer extends PureComponent {
       lineDirection,
       closeOnEsc,
       'aria-label': ariaLabel,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.value;
-    delete props.onVisibilityChange;
-    delete props.onChange;
-    delete props.defaultValue;
-    delete props.defaultVisible;
-    delete props.defaultTimeMode;
-
-    // Delete deprecated
-    delete props.isOpen;
-    delete props.initialTimeMode;
-    delete props.initiallyOpen;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     const visible = typeof this.props.isOpen !== 'undefined'
       ? this.props.isOpen

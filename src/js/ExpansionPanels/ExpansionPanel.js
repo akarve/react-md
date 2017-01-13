@@ -2,6 +2,7 @@ import React, { PureComponent, PropTypes, Children } from 'react';
 import { findDOMNode } from 'react-dom';
 import cn from 'classnames';
 
+import reduceProps from '../utils/reduceProps';
 import controlled from '../utils/PropTypes/controlled';
 import Paper from '../Papers/Paper';
 import Collapser from '../FontIcons/Collapser';
@@ -12,6 +13,16 @@ import PanelContent from './PanelContent';
 const LABEL_FONT_SIZE = 15;
 const LINE_HEIGHT = 1.42857;
 const SINGLE_LINE_HEIGHT = LABEL_FONT_SIZE * LINE_HEIGHT;
+
+const REMOVED_KEYS = [
+  'defaultExpanded,',
+  'expanded,',
+  'onSave,',
+  'onCancel,',
+  'onExpandToggle,',
+  'closeOnSave,',
+  'closeOnCancel,',
+];
 
 /**
  * The `ExpansionPanel` component needs to be used with the `ExpansionList`
@@ -339,16 +350,9 @@ export default class ExpansionPanel extends PureComponent {
       contentStyle,
       contentClassName,
       tabIndex,
-      ...props
+      ...remaining
     } = this.props;
-
-    delete props.defaultExpanded;
-    delete props.expanded;
-    delete props.onSave;
-    delete props.onCancel;
-    delete props.onExpandToggle;
-    delete props.closeOnSave;
-    delete props.closeOnCancel;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     const { twoLine } = this.state;
     const expanded = this._isExpanded(this.props, this.state);

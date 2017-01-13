@@ -4,10 +4,13 @@ import cn from 'classnames';
 import SwipeableViews from 'react-swipeable-views';
 
 import getField from '../utils/getField';
+import reduceProps from '../utils/reduceProps';
 import controlled from '../utils/PropTypes/controlled';
 import between from '../utils/PropTypes/between';
 import Paper from '../Papers/Paper';
 import TabPanel from './TabPanel';
+
+const REMOVED_KEYS = ['toolbar'];
 
 /**
  * The `TabsContainer` component is used when you want to have your `Tabs` connected with
@@ -223,9 +226,9 @@ export default class TabsContainer extends PureComponent {
       colored,
       fixed,
       labelAndIcon,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.toolbar;
+    const props = reduceProps(remaining, REMOVED_KEYS);
     let { toolbar } = this.props;
 
     const activeTabIndex = getField(this.props, this.state, 'activeTabIndex');
@@ -286,6 +289,7 @@ export default class TabsContainer extends PureComponent {
 
     return (
       <Component
+        {...props}
         style={style}
         className={cn('md-tabs-container', className)}
         ref={container => {

@@ -1,6 +1,21 @@
 import React, { PureComponent, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
+
+import reduceProps from '../utils/reduceProps';
 import FileInput from './FileInput';
+
+const REMOVED_KEYS = [
+  'maxSize',
+  'onLoad',
+  'onLoadStart',
+  'onLoadEnd',
+  'onProgress',
+  'onAbort',
+  'onError',
+  'maxSize',
+  'onSizeError',
+  'readAs',
+];
 
 /**
  * The `FileUpload` component is used to upload files locally. If you want
@@ -228,8 +243,7 @@ export default class FileUpload extends PureComponent {
     const reader = this.state[fileName];
     if (reader) {
       reader.abort();
-      const state = this.state;
-      delete state[fileName];
+      const state = reduceProps(this.state, fileName);
 
       findDOMNode(this).querySelector('.md-file-input').value = '';
 
@@ -280,8 +294,7 @@ export default class FileUpload extends PureComponent {
         onLoad(file, e.target.result, e);
       }
 
-      const state = Object.assign({}, this.state);
-      delete state[name];
+      const state = reduceProps(this.state, name);
       this.setState(state);
     };
 
@@ -345,19 +358,7 @@ export default class FileUpload extends PureComponent {
   }
 
   render() {
-    const { ...props } = this.props;
-
-    // Remove invalid input props
-    delete props.maxSize;
-    delete props.onLoad;
-    delete props.onLoadStart;
-    delete props.onLoadEnd;
-    delete props.onProgress;
-    delete props.onAbort;
-    delete props.onError;
-    delete props.maxSize;
-    delete props.onSizeError;
-    delete props.readAs;
+    const props = reduceProps(this.props, REMOVED_KEYS);
 
     return (
       <FileInput {...props} onChange={this._handleUpload} />

@@ -5,6 +5,7 @@ import deprecated from 'react-prop-types/lib/deprecated';
 import isRequiredForA11y from 'react-prop-types/lib/isRequiredForA11y';
 
 import { TAB } from '../constants/keyCodes';
+import reduceProps from '../utils/reduceProps';
 import controlled from '../utils/PropTypes/controlled';
 import invalidIf from '../utils/PropTypes/invalidIf';
 import minNumber from '../utils/PropTypes/minNumber';
@@ -14,6 +15,22 @@ import TextFieldMessage from './TextFieldMessage';
 import PasswordButton from './PasswordButton';
 import InputField from './InputField';
 import TextFieldDivider from './TextFieldDivider';
+
+const REMOVED_KEYS = [
+  'label',
+  'placeholder',
+  'error',
+  'active',
+  'floating',
+  'leftIcon',
+  'rightIcon',
+  'adjustMinWidth',
+  'onClick',
+  'onChange',
+  'onKeyDown',
+  'onFocus',
+  'floatingLabel',
+];
 
 /**
  * The `TextField` component can either be a single line `input` field or a multiline
@@ -696,21 +713,9 @@ export default class TextField extends PureComponent {
       ink,
       inlineIndicator,
       icon,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.label;
-    delete props.placeholder;
-    delete props.error;
-    delete props.active;
-    delete props.floating;
-    delete props.leftIcon;
-    delete props.rightIcon;
-    delete props.adjustMinWidth;
-    delete props.onClick;
-    delete props.onChange;
-    delete props.onKeyDown;
-    delete props.onFocus;
-    delete props.floatingLabel;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     let {
       label,

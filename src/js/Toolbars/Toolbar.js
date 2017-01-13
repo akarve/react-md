@@ -2,10 +2,26 @@ import React, { PureComponent, PropTypes, Children, cloneElement } from 'react';
 import cn from 'classnames';
 import deprecated from 'react-prop-types/lib/deprecated';
 
+import reduceProps from '../utils/reduceProps';
 import invalidIf from '../utils/PropTypes/invalidIf';
 import between from '../utils/PropTypes/between';
 import Paper from '../Papers/Paper';
 import ToolbarTitle from './ToolbarTitle';
+
+const REMOVED_KEYS = [
+  'nav',
+  'title',
+  'titleMenu',
+  'zDepth',
+  'colored',
+  'prominent',
+
+  // deprecated
+  'containerStyle',
+  'containerClassName',
+  'actionLeft',
+  'actionsRight',
+];
 
 export default class Toolbar extends PureComponent {
   static propTypes = {
@@ -162,20 +178,9 @@ export default class Toolbar extends PureComponent {
       actionsRight, // deprecated
       children,
       inset,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.nav;
-    delete props.title;
-    delete props.titleMenu;
-    delete props.zDepth;
-    delete props.colored;
-    delete props.prominent;
-
-    // delete deprecated;
-    delete props.containerStyle;
-    delete props.containerClassName;
-    delete props.actionLeft;
-    delete props.actionsRight;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     let {
       colored,

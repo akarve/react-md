@@ -4,6 +4,7 @@ import cn from 'classnames';
 import deprecated from 'react-prop-types/lib/deprecated';
 
 import getField from '../utils/getField';
+import reduceProps from '../utils/reduceProps';
 import controlled from '../utils/PropTypes/controlled';
 import { TAB } from '../constants/keyCodes';
 import AccessibleFakeInkedButton from '../Helpers/AccessibleFakeInkedButton';
@@ -12,6 +13,8 @@ import Collapser from '../FontIcons/Collapser';
 import TileAddon from './TileAddon';
 import ListItemText from './ListItemText';
 import List from './List';
+
+const REMOVED_KEYS = ['isOpen', 'defaultOpen', 'initiallyOpen'];
 
 /**
  * The `ListItem` component is used for rendering a `li` tag with text and optional
@@ -377,11 +380,9 @@ export default class ListItem extends PureComponent {
       activeClassName,
       expanderIconChildren,
       expanderIconClassName,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.isOpen;
-    delete props.defaultOpen;
-    delete props.initiallyOpen;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     const isOpen = getField(this.props, this.state, 'isOpen');
     const leftNode = (

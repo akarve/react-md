@@ -1,9 +1,11 @@
 import React, { PureComponent, PropTypes, Children, cloneElement, isValidElement } from 'react';
 import cn from 'classnames';
 
+import reduceProps from '../utils/reduceProps';
 import Button from '../Buttons/Button';
 
 const FOOTER_PADDING = 8;
+const REMOVED_KEYS = ['className', 'onActionMount'];
 
 export default class DialogFooter extends PureComponent {
   static propTypes = {
@@ -80,9 +82,8 @@ export default class DialogFooter extends PureComponent {
   render() {
     const { stacked } = this.state;
     let { className } = this.props;
-    const { children, actions, ...props } = this.props;
-    delete props.className;
-    delete props.onActionMount;
+    const { children, actions, ...remaining } = this.props;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     if (!actions || (Array.isArray(actions) && !actions.length)) {
       return null;

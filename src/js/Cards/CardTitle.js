@@ -2,8 +2,11 @@ import React, { Component, PropTypes, Children, cloneElement } from 'react';
 import cn from 'classnames';
 import deprecated from 'react-prop-types/lib/deprecated';
 
+import reduceProps from '../utils/reduceProps';
 import CardTitleBlock from './CardTitleBlock';
 import CardExpander from './CardExpander';
+
+const REMOVED_KEYS = ['avatar'];
 
 /**
  * The `CardTitle` component is used to render a title in a Card along
@@ -69,9 +72,10 @@ export default class CardTitle extends Component {
       expander,
       isExpander,
       children,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.avatar;
+    const props = reduceProps(remaining, REMOVED_KEYS);
+
     let { avatar } = this.props;
     if (avatar) {
       const { className: avatarClassName } = Children.only(avatar).props;

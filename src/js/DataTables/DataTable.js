@@ -2,9 +2,20 @@ import React, { PureComponent, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
 import cn from 'classnames';
 
+import reduceProps from '../utils/reduceProps';
 import requiredForA11yIfNot from '../utils/PropTypes/requiredForA11yIfNot';
 import invalidIf from '../utils/PropTypes/invalidIf';
 import contextTypes from './contextTypes';
+
+const REMOVED_KEYS = [
+  'checkedIconChildren',
+  'checkedIconClassName',
+  'uncheckedIconChildren',
+  'uncheckedIconClassName',
+  'defaultSelectedRows',
+  'baseId',
+  'onRowToggle',
+];
 
 /**
  * The `DataTable` component is used to manage the state of all rows.
@@ -204,15 +215,9 @@ export default class DataTable extends PureComponent {
       children,
       plain,
       responsive,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.checkedIconChildren;
-    delete props.checkedIconClassName;
-    delete props.uncheckedIconChildren;
-    delete props.uncheckedIconClassName;
-    delete props.defaultSelectedRows;
-    delete props.baseId;
-    delete props.onRowToggle;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     const table = (
       <table

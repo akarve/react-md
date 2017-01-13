@@ -1,8 +1,11 @@
 import React, { PureComponent, PropTypes, Children, cloneElement, isValidElement } from 'react';
 import cn from 'classnames';
 
+import reduceProps from '../utils/reduceProps';
 import oneRequired from '../utils/PropTypes/oneRequired';
 import AccessibleFakeInkedButton from '../Helpers/AccessibleFakeInkedButton';
+
+const REMOVED_KEYS = ['index', 'icon', 'label'];
 
 /**
  * The `Tab` component is used for rendering a single tab in the `Tabs` component.
@@ -111,11 +114,9 @@ export default class Tab extends PureComponent {
       controlsId,
       className,
       active,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.index;
-    delete props.icon;
-    delete props.label;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     let { icon, label } = this.props;
     if (icon) {

@@ -5,6 +5,7 @@ import deprecated from 'react-prop-types/lib/deprecated';
 import isRequiredForA11y from 'react-prop-types/lib/isRequiredForA11y';
 
 import getField from '../utils/getField';
+import reduceProps from '../utils/reduceProps';
 import controlled from '../utils/PropTypes/controlled';
 import invalidIf from '../utils/PropTypes/invalidIf';
 import Button from '../Buttons/Button';
@@ -17,6 +18,31 @@ import { isTemporary, isPersistent, isPermanent, isMini } from '../Drawers/isTyp
 import JumpToContentLink from './JumpToContentLink';
 import CloseButton from './CloseButton';
 import MiniListItem from './MiniListItem';
+
+const REMOVED_KEYS = [
+  'drawerType',
+  'drawerHeader',
+  'persistentIconChildren',
+  'persistentIconClassName',
+  'jumpLabel',
+
+  // deprecated
+  'onDrawerChange',
+  'closeIconChildren',
+  'closeIconClassName',
+];
+
+const MINI_REMOVED_KEYS = [
+  'primaryText',
+  'secondaryText',
+  'rightIcon',
+  'rightAvatar',
+  'threeLines',
+  'nestedItems',
+  'expanderIconChildren',
+  'expanderIconClassName',
+  'children',
+];
 
 function getNonMiniType(type) {
   const { PERSISTENT_MINI: pMini, TEMPORARY_MINI: tMini } = DrawerTypes;
@@ -32,20 +58,12 @@ function toMiniListItem(item, index) {
     return item;
   }
 
-  const { divider, subheader, key, ...itemProps } = item;
+  const { divider, subheader, key, ...remaining } = item;
   if (divider || subheader) {
     return null;
   }
 
-  delete itemProps.primaryText;
-  delete itemProps.secondaryText;
-  delete itemProps.rightIcon;
-  delete itemProps.rightAvatar;
-  delete itemProps.threeLines;
-  delete itemProps.nestedItems;
-  delete itemProps.expanderIconChildren;
-  delete itemProps.expanderIconClassName;
-  delete itemProps.children;
+  const itemProps = reduceProps(remaining, MINI_REMOVED_KEYS);
 
   return <MiniListItem key={key || index} {...itemProps} />;
 }
@@ -787,18 +805,9 @@ export default class NavigationDrawer extends PureComponent {
       includeDrawerHeader,
       contentId,
       contentProps,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.drawerType;
-    delete props.drawerHeader;
-    delete props.persistentIconChildren;
-    delete props.persistentIconClassName;
-    delete props.jumpLabel;
-
-    // Deprecated deletes
-    delete props.onDrawerChange;
-    delete props.closeIconChildren;
-    delete props.closeIconClassName;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     let { drawerHeader } = this.props;
     const { desktop, tablet, contentActive } = this.state;

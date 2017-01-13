@@ -3,12 +3,17 @@ import cn from 'classnames';
 
 import { TAB } from '../constants/keyCodes';
 import TICK from '../constants/CSSTransitionGroupTick';
+import reduceProps from '../utils/reduceProps';
 import invalidIf from '../utils/PropTypes/invalidIf';
 import captureNextEvent from '../utils/EventUtils/captureNextEvent';
 import FontIcon from '../FontIcons/FontIcon';
 import IconSeparator from '../Helpers/IconSeparator';
 import injectInk from '../Inks/injectInk';
 import injectTooltip from '../Tooltips/injectTooltip';
+
+const REMOVED_KEYS = ['children'];
+const HREF_REMOVED_KEYS = REMOVED_KEYS.slice();
+HREF_REMOVED_KEYS.push('type');
 
 /**
  * The `Button` component can either be a `FlatButton`, `RaisedButton`, `IconButton`, or a
@@ -479,15 +484,9 @@ class Button extends PureComponent {
       tooltip,
       icon,
       forceIconSize,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.children;
-    delete props.tooltipLabel;
-    delete props.tooltipPosition;
-
-    if (href) {
-      delete props.type;
-    }
+    const props = reduceProps(remaining, href ? HREF_REMOVED_KEYS : REMOVED_KEYS);
 
     let { children } = this.props;
     const { pressed, hover, snackbar, snackbarType } = this.state;

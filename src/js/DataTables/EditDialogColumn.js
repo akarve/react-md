@@ -5,6 +5,7 @@ import cn from 'classnames';
 import { ENTER, TAB, ESC } from '../constants/keyCodes';
 import TICK from '../constants/CSSTransitionGroupTick';
 import getField from '../utils/getField';
+import reduceProps from '../utils/reduceProps';
 import invalidIf from '../utils/PropTypes/invalidIf';
 import DialogFooter from '../Dialogs/DialogFooter';
 import TableColumn from './TableColumn';
@@ -12,6 +13,22 @@ import TextField from '../TextFields/TextField';
 import FontIcon from '../FontIcons/FontIcon';
 
 import findTable from './findTable';
+
+const REMOVED_KEYS = [
+  'id',
+  'onMouseOver',
+  'onMouseLeave',
+  'onTouchStart',
+  'onTouchEnd',
+  'value',
+  'defaultValue',
+  'onOkClick',
+  'onCancelClick',
+  'header',
+  'okOnOutsideClick',
+  'transitionDuration',
+  'scrollThreshold',
+];
 
 /**
  * A Text Edit dialog for tables. This can either be a small
@@ -615,22 +632,9 @@ export default class EditDialogColumn extends PureComponent {
       noIcon,
       header,
       enforceMinWidth,
-      ...props
+      ...remaining
     } = this.props;
-
-    delete props.id;
-    delete props.onMouseOver;
-    delete props.onMouseLeave;
-    delete props.onTouchStart;
-    delete props.onTouchEnd;
-    delete props.value;
-    delete props.defaultValue;
-    delete props.onOkClick;
-    delete props.onCancelClick;
-    delete props.header;
-    delete props.okOnOutsideClick;
-    delete props.transitionDuration;
-    delete props.scrollThreshold;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     const value = getField(this.props, this.state, 'value');
     let { id } = this.props;

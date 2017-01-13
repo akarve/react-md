@@ -1,6 +1,10 @@
 import React, { PureComponent, PropTypes } from 'react';
 import cn from 'classnames';
 
+import reduceProps from '../utils/reduceProps';
+
+const REMOVED_KEYS = ['expandable'];
+
 /**
  * The `CardText` component is a simple wrapper for text or any content in a `Card`.
  * It really just adds correct padding and font color.
@@ -42,8 +46,8 @@ export default class CardText extends PureComponent {
   };
 
   render() {
-    const { component: Component, className, ...props } = this.props;
-    delete props.expandable;
+    const { component: Component, className, ...remaining } = this.props;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     return <Component {...props} className={cn('md-card-text', className)} />;
   }

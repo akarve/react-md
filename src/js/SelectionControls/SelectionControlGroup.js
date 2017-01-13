@@ -2,8 +2,11 @@ import React, { PureComponent, PropTypes } from 'react';
 import cn from 'classnames';
 
 import getField from '../utils/getField';
+import reduceProps from '../utils/reduceProps';
 import controlled from '../utils/PropTypes/controlled';
 import SelectionControl from './SelectionControl';
+
+const REMOVED_KEYS = ['value', 'controls', 'defaultValue'];
 
 /**
  * A custom PropTypes validator to make sure that each `control` in the `controls` prop
@@ -246,12 +249,9 @@ export default class SelectionControlGroup extends PureComponent {
       component: Component,
       labelComponent: LabelComponent,
       inline,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.value;
-    delete props.controls;
-    delete props.defaultValue;
-
+    const props = reduceProps(remaining, REMOVED_KEYS);
     const value = getField(this.props, this.state, 'value');
 
     const controls = this.props.controls.map((control, i) => {

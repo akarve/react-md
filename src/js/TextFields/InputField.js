@@ -1,7 +1,10 @@
 import { PureComponent, PropTypes, createElement } from 'react';
 import cn from 'classnames';
 
+import reduceProps from '../utils/reduceProps';
 import TextArea from './TextArea';
+
+const REMOVED_KEYS = ['maxRows', 'onHeightChange'];
 
 /**
  * This component either renders a base `input` tag or the `TextArea` component.
@@ -69,16 +72,14 @@ export default class InputField extends PureComponent {
       passwordVisible,
       block,
       inlineIndicator,
-      ...props
+      ...remaining
     } = this.props;
 
     const multiline = typeof rows !== 'undefined';
     const Component = multiline ? TextArea : 'input';
+    const props = reduceProps(remaining, multiline ? null : REMOVED_KEYS);
     if (!multiline) {
       props.type = passwordVisible ? 'text' : type;
-
-      delete props.maxRows;
-      delete props.onHeightChange;
     } else {
       props.label = label;
       props.block = block;

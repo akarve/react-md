@@ -7,10 +7,25 @@ import isRequiredForA11y from 'react-prop-types/lib/isRequiredForA11y';
 
 import { ESC } from '../constants/keyCodes';
 import TICK from '../constants/CSSTransitionGroupTick';
+import reduceProps from '../utils/reduceProps';
 import toggleScroll from '../utils/toggleScroll';
 import oneRequiredForA11y from '../utils/PropTypes/oneRequiredForA11y';
 import Dialog from './Dialog';
 import Portal from '../Helpers/Portal';
+
+const REMOVED_KEYS = [
+  'close',
+  'isOpen',
+  'visible',
+  'onShow',
+  'onHide',
+  'actionLeft',
+  'actionRight',
+  'transitionName',
+  'transitionEnter',
+  'transitionLeave',
+  'closeOnEsc',
+];
 
 export default class DialogContainer extends PureComponent {
   /* eslint-disable max-len */
@@ -411,19 +426,9 @@ export default class DialogContainer extends PureComponent {
       transitionEnterTimeout,
       transitionLeaveTimeout,
       renderNode,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.close;
-    delete props.isOpen;
-    delete props.visible;
-    delete props.onShow;
-    delete props.onHide;
-    delete props.actionLeft;
-    delete props.actionRight;
-    delete props.transitionName;
-    delete props.transitionEnter;
-    delete props.transitionLeave;
-    delete props.closeOnEsc;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     const dialog = (
       <Dialog

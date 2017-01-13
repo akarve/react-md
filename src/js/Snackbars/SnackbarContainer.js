@@ -4,11 +4,13 @@ import CSSTransitionGroup from 'react-addons-css-transition-group';
 import deprecated from 'react-prop-types/lib/deprecated';
 
 import TICK from '../constants/CSSTransitionGroupTick';
+import reduceProps from '../utils/reduceProps';
 import isInvalidAnimate from './isInvalidAnimate';
 import Portal from '../Helpers/Portal';
 import Snackbar from './Snackbar';
 
 const CHAINED_TOAST_DELAY = 50;
+const REMOVED_KEYS = ['toasts'];
 
 /**
  * The `Snackbar` component is used for displaying a concise and small message to the user about
@@ -292,9 +294,9 @@ export default class SnackbarContainer extends PureComponent {
       dismiss,
       onDismiss,
       renderNode,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.toasts;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     let snackbar;
     if (toast) {

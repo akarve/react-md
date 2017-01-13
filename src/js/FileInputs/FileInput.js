@@ -3,10 +3,23 @@ import cn from 'classnames';
 import isRequiredForA11y from 'react-prop-types/lib/isRequiredForA11y';
 
 import { TAB, SPACE, ENTER } from '../constants/keyCodes';
+import reduceProps from '../utils/reduceProps';
 import captureNextEvent from '../utils/EventUtils/captureNextEvent';
 import FontIcon from '../FontIcons/FontIcon';
 import IconSeparator from '../Helpers/IconSeparator';
 import AccessibleFakeInkedButton from '../Helpers/AccessibleFakeInkedButton';
+
+const REMOVED_KEYS = [
+  'onChange',
+  'onKeyUp',
+  'onKeyDown',
+  'onMouseUp',
+  'onMouseDown',
+  'onMouseOver',
+  'onMouseLeave',
+  'onTouchStart',
+  'onTouchEnd',
+];
 
 /**
  * The `FileInput` component is used as simple styling for the `<input type="file" />`.
@@ -328,17 +341,9 @@ export default class FileInput extends PureComponent {
       disabled,
       accept,
       multiple,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.onChange;
-    delete props.onKeyUp;
-    delete props.onKeyDown;
-    delete props.onMouseUp;
-    delete props.onMouseDown;
-    delete props.onMouseOver;
-    delete props.onMouseLeave;
-    delete props.onTouchStart;
-    delete props.onTouchEnd;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     const icon = !iconClassName && !iconChildren
       ? null

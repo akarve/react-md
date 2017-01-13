@@ -1,7 +1,17 @@
 import React, { PureComponent, PropTypes, Children } from 'react';
 import { findDOMNode } from 'react-dom';
 import cn from 'classnames';
+
 import { TAB, ENTER } from '../constants/keyCodes';
+import reduceProps from '../utils/reduceProps';
+
+const REMOVED_KEYS = [
+  'onBlur',
+  'onClick',
+  'onKeyUp',
+  'onKeyDown',
+  'onTabFocus',
+];
 
 /**
  * The `AccessibleFakeButton` is a generic component that can be used to render
@@ -193,13 +203,9 @@ export default class AccessibleFakeButton extends PureComponent {
       disabled,
       tabIndex,
       ink,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.onBlur;
-    delete props.onClick;
-    delete props.onKeyUp;
-    delete props.onKeyDown;
-    delete props.onTabFocus;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     let childElements = children;
     if (ink) {

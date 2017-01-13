@@ -3,10 +3,31 @@ import cn from 'classnames';
 import deprecated from 'react-prop-types/lib/deprecated';
 
 import getField from '../utils/getField';
+import reduceProps from '../utils/reduceProps';
 import controlled from '../utils/PropTypes/controlled';
 import Portal from '../Helpers/Portal';
 import Paper from '../Papers/Paper';
 import BottomNav from './BottomNav';
+
+const REMOVED_KEYS = [
+  'links',
+  'activeIndex',
+  'onNavChange',
+  'onVisibilityChange',
+  'defaultVisible',
+  'defaultActiveIndex',
+  'dynamicThreshold',
+  'transitionDuration',
+
+  // deprecated
+  'onChange',
+  'initiallyVisible',
+  'containerStyle',
+  'containerClassName',
+  'transitionName',
+  'transitionEnterTimeout',
+  'transitionLeaveTimeout',
+];
 
 /**
  * The `BottomNavigation` component is an alternative to the `NavigationDrawer` for handling navigation
@@ -292,25 +313,9 @@ export default class BottomNavigation extends PureComponent {
       colored,
       dynamic,
       renderNode,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.links;
-    delete props.activeIndex;
-    delete props.onNavChange;
-    delete props.onVisibilityChange;
-    delete props.defaultVisible;
-    delete props.defaultActiveIndex;
-    delete props.dynamicThreshold;
-    delete props.transitionDuration;
-
-    // Delete deprecated
-    delete props.onChange;
-    delete props.initiallyVisible;
-    delete props.containerStyle;
-    delete props.containerClassName;
-    delete props.transitionName;
-    delete props.transitionEnterTimeout;
-    delete props.transitionLeaveTimeout;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     let { links } = this.props;
     if (actions) {

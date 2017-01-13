@@ -2,11 +2,27 @@ import React, { PureComponent, PropTypes, Children } from 'react';
 import cn from 'classnames';
 import deprecated from 'react-prop-types/lib/deprecated';
 
+import reduceProps from '../utils/reduceProps';
 import controlled from '../utils/PropTypes/controlled';
 import getField from '../utils/getField';
 import contextTypes from './contextTypes';
 import Paper from '../Papers/Paper';
 import Collapse from '../Helpers/Collapse';
+
+const REMOVED_KEYS = [
+  'expanded',
+  'isExpanded',
+  'onExpanderClick',
+  'initiallyExpanded',
+  'defaultExpanded',
+  'iconChildren',
+  'iconClassName',
+  'expanderIconChildren',
+  'expanderIconClassName',
+  'expanderTooltipLabel',
+  'expanderTooltipDelay',
+  'expanderTooltipPosition',
+];
 
 export default class Card extends PureComponent {
   static propTypes = {
@@ -203,20 +219,9 @@ export default class Card extends PureComponent {
       raise,
       tableCard,
       children,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.expanded;
-    delete props.isExpanded;
-    delete props.onExpanderClick;
-    delete props.initiallyExpanded;
-    delete props.defaultExpanded;
-    delete props.iconChildren;
-    delete props.iconClassName;
-    delete props.expanderIconChildren;
-    delete props.expanderIconClassName;
-    delete props.expanderTooltipLabel;
-    delete props.expanderTooltipDelay;
-    delete props.expanderTooltipPosition;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     const expanded = typeof this.props.isExpanded !== 'undefined'
       ? this.props.isExpanded

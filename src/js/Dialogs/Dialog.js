@@ -2,11 +2,22 @@ import React, { PureComponent, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
 import cn from 'classnames';
 
+import reduceProps from '../utils/reduceProps';
 import isValidFocusKeypress from '../utils/EventUtils/isValidFocusKeypress';
 import FocusContainer from '../Helpers/FocusContainer';
 import Paper from '../Papers/Paper';
 import DialogTitle from './DialogTitle';
 import DialogFooter from './DialogFooter';
+
+const REMOVED_KEYS = [
+  'pageX',
+  'pageY',
+  'containerX',
+  'containerY',
+  'style',
+  'onOpen',
+  'onLeave',
+];
 
 export default class Dialog extends PureComponent {
   static propTypes = {
@@ -123,15 +134,9 @@ export default class Dialog extends PureComponent {
       actions,
       children,
       fullPage,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.pageX;
-    delete props.pageY;
-    delete props.containerX;
-    delete props.containerY;
-    delete props.style;
-    delete props.onOpen;
-    delete props.onLeave;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     let { 'aria-labelledby': labelledBy, style } = this.props;
     const titleId = `${id}Title`;

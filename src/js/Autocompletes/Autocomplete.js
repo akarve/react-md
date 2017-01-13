@@ -7,9 +7,17 @@ import controlled from '../utils/PropTypes/controlled';
 import getField from '../utils/getField';
 import { UP, DOWN, TAB, ENTER, SPACE } from '../constants/keyCodes';
 
+import reduceProps from '../utils/reduceProps';
 import ListItem from '../Lists/ListItem';
 import Menu from '../Menus/Menu';
 import TextField from '../TextFields/TextField';
+
+const REMOVED_KEYS = [
+  'filter', 'data', 'dataValue', 'dataLabel',
+  'value', 'defaultValue', 'findInlineSuggestion', 'clearOnAutocomplete', 'deleteKeys',
+  'onAutocomplete', 'onMenuOpen', 'onMenuClose', 'onBlur', 'onFocus', 'onKeyDown', 'onMouseDown',
+  'onChange',
+];
 
 /**
  * The `Autocomplete` component is useful for presenting real-time suggestions, completions,
@@ -494,8 +502,7 @@ export default class Autocomplete extends PureComponent {
         });
       }
     } else if (isDeleted) {
-      const suggestionStyle = Object.assign({}, this.state.suggestionStyle);
-      delete suggestionStyle.bottom;
+      const suggestionStyle = reduceProps(this.state.suggestionStyle, 'bottom');
 
       this.setState({ suggestionStyle });
     }
@@ -746,19 +753,10 @@ export default class Autocomplete extends PureComponent {
         break;
       default:
         props = {
-          ...match,
+          ...reduceProps(match, deleteKeys),
           key: match.key || (dataValue && match[dataValue]) || match[dataLabel],
           primaryText: match[dataLabel],
         };
-
-        if (typeof deleteKeys === 'string') {
-          delete props[deleteKeys];
-        } else if (Array.isArray(deleteKeys)) {
-          deleteKeys.forEach(key => {
-            delete props[key];
-          });
-        }
-
     }
 
     // Allows focus, but does not let tab focus. This is so up and down keys work.
@@ -828,8 +826,6 @@ export default class Autocomplete extends PureComponent {
   render() {
     const { isOpen, matches, tabbed, focus, suggestionStyle } = this.state;
     const {
-      fullWidth,
-      block,
       style,
       className,
       listStyle,
@@ -837,26 +833,11 @@ export default class Autocomplete extends PureComponent {
       textFieldStyle,
       textFieldClassName,
       inline,
-      ...props
+      block,
+      fullWidth,
+      ...remaining
     } = this.props;
-    delete props.value;
-    delete props.defaultValue;
-    delete props.dataLabel;
-    delete props.dataValue;
-    delete props.filter;
-    delete props.data;
-    delete props.onAutocomplete;
-    delete props.onMenuOpen;
-    delete props.onMenuClose;
-    delete props.onBlur;
-    delete props.onFocus;
-    delete props.onKeyDown;
-    delete props.onMouseDown;
-    delete props.onChange;
-    delete props.findInlineSuggestion;
-    delete props.clearOnAutocomplete;
-    delete props.deleteKeys;
-
+    const props = reduceProps(remaining, REMOVED_KEYS);
     const value = getField(this.props, this.state, 'value');
 
     const autocomplete = (

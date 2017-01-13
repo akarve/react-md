@@ -2,6 +2,11 @@ import React, { PureComponent, PropTypes } from 'react';
 import cn from 'classnames';
 
 import oneRequiredForA11yIf from '../utils/PropTypes/oneRequiredForA11yIf';
+import reduceProps from '../utils/reduceProps';
+
+const REMOVED_KEYS = [
+  'random',
+];
 
 /**
  * The avatar component is used to convert a `FontIcon`, an image, or
@@ -143,9 +148,9 @@ export default class Avatar extends PureComponent {
       suffixes,
       iconSized,
       role,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.random;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     return (
       <div

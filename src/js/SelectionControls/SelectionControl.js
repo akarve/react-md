@@ -4,10 +4,28 @@ import deprecated from 'react-prop-types/lib/deprecated';
 import isRequiredForA11y from 'react-prop-types/lib/isRequiredForA11y';
 
 import getField from '../utils/getField';
+import reduceProps from '../utils/reduceProps';
 import capitalizeFirst from '../utils/StringUtils/capitalizeFirst';
 import AccessibleFakeInkedButton from '../Helpers/AccessibleFakeInkedButton';
 import FontIcon from '../FontIcons/FontIcon';
 import SwitchTrack from './SwitchTrack';
+
+const REMOVED_KEYS = [
+  'label',
+  'checked',
+  'onChange',
+  'checkedIcon',
+  'uncheckedIcon',
+  '__superSecreteProp',
+  'checkedRadioIconChildren',
+  'checkedRadioIconClassName',
+  'uncheckedRadioIconChildren',
+  'uncheckedRadioIconClassName',
+  'checkedCheckboxIconChildren',
+  'checkedCheckboxIconClassName',
+  'uncheckedCheckboxIconChildren',
+  'uncheckedCheckboxIconClassName',
+];
 
 /**
  * Prevents a second warning from appearing when using the deprecated or a11y required
@@ -279,22 +297,9 @@ export default class SelectionControl extends PureComponent {
       labelBefore,
       onBlur,
       onFocus,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.label;
-    delete props.checked;
-    delete props.onChange;
-    delete props.checkedIcon;
-    delete props.uncheckedIcon;
-    delete props.__superSecreteProp;
-    delete props.checkedRadioIconChildren;
-    delete props.checkedRadioIconClassName;
-    delete props.uncheckedRadioIconChildren;
-    delete props.uncheckedRadioIconClassName;
-    delete props.checkedCheckboxIconChildren;
-    delete props.checkedCheckboxIconClassName;
-    delete props.uncheckedCheckboxIconChildren;
-    delete props.uncheckedCheckboxIconClassName;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     const checked = getField(this.props, this.state, 'checked');
     const isSwitch = type === 'switch';

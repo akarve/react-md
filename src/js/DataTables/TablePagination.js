@@ -3,9 +3,17 @@ import { findDOMNode } from 'react-dom';
 import cn from 'classnames';
 
 import getField from '../utils/getField';
+import reduceProps from '../utils/reduceProps';
 import SelectField from '../SelectFields/SelectField';
 import Button from '../Buttons/Button';
 import findTable from './findTable';
+
+const REMOVED_KEYS = [
+  'onPagination',
+  'rowsPerPage',
+  'defaultPage',
+  'defaultRowsPerPage',
+];
 
 /**
  * The `TablePagination` component is used to generate the table footer that helps
@@ -209,12 +217,9 @@ export default class TablePagination extends PureComponent {
       decrementIconChildren,
       decrementIconClassName,
       page,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.onPagination;
-    delete props.rowsPerPage;
-    delete props.defaultPage;
-    delete props.defaultRowsPerPage;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     const rowsPerPage = getField(this.props, this.state, 'rowsPerPage');
     let { start } = this.state;

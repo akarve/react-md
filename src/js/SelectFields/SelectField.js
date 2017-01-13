@@ -6,6 +6,7 @@ import isRequiredForA11y from 'react-prop-types/lib/isRequiredForA11y';
 
 import { UP, DOWN, ESC, ENTER, TAB, ZERO, NINE, KEYPAD_ZERO, KEYPAD_NINE } from '../constants/keyCodes';
 import getField from '../utils/getField';
+import reduceProps from '../utils/reduceProps';
 import controlled from '../utils/PropTypes/controlled';
 import isBetween from '../utils/NumberUtils/isBetween';
 import addSuffix from '../utils/StringUtils/addSuffix';
@@ -20,9 +21,29 @@ import Field from './Field';
 const VALID_LIST_ITEM_PROPS = Object.keys(ListItem.propTypes);
 
 const MOBILE_LIST_PADDING = 8;
-const SelectFieldPositions = Object.assign({}, Positions);
-delete SelectFieldPositions.BOTTOM_RIGHT;
-delete SelectFieldPositions.BOTTOM_LEFt;
+const SelectFieldPositions = reduceProps(Positions, ['BOTTOM_LEFT', 'BOTTOM_RIGHT']);
+
+const REMOVED_KEYS = [
+  'error',
+  'itemLabel',
+  'itemValue',
+  'menuId',
+  'listId',
+  'defaultValue',
+  'value',
+  'isOpen',
+  'defaultOpen',
+  'keyboardMatchingTimeout',
+  'onMenuToggle',
+
+  // deprecated
+  'menuStyle',
+  'menuClassName',
+  'initiallyOpen',
+  'floatingLabel',
+  'noAutoAdjust',
+  'adjustMinWidth',
+];
 
 export default class SelectField extends PureComponent {
   static Positions = SelectFieldPositions;
@@ -848,27 +869,9 @@ export default class SelectField extends PureComponent {
       helpOnFocus,
       required,
       fullWidth,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.error;
-    delete props.itemLabel;
-    delete props.itemValue;
-    delete props.menuId;
-    delete props.listId;
-    delete props.defaultValue;
-    delete props.value;
-    delete props.isOpen;
-    delete props.defaultOpen;
-    delete props.keyboardMatchingTimeout;
-    delete props.onMenuToggle;
-
-    // delete deprecated
-    delete props.menuStyle;
-    delete props.menuClassName;
-    delete props.initiallyOpen;
-    delete props.floatingLabel;
-    delete props.noAutoAdjust;
-    delete props.adjustMinWidth;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     let { menuId, listId, placeholder, label, error } = this.props;
     error = error || this.state.error;

@@ -1,5 +1,8 @@
 import React, { PureComponent, PropTypes } from 'react';
 import cn from 'classnames';
+import reduceProps from '../utils/reduceProps';
+
+const REMOVED_KEYS = ['expandable'];
 
 function validateAspectRatio(props, propName, component, ...args) {
   const value = props[propName];
@@ -67,9 +70,9 @@ export default class Media extends PureComponent {
       children,
       forceAspect,
       aspectRatio,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.expandable;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     return (
       <Component

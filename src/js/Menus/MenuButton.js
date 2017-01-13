@@ -2,9 +2,12 @@ import React, { PureComponent, PropTypes } from 'react';
 
 import isRequiredForA11y from 'react-prop-types/lib/isRequiredForA11y';
 
+import reduceProps from '../utils/reduceProps';
 import Menu from './Menu';
 import Button from '../Buttons/Button';
 import Positions from './Positions';
+
+const REMOVED_KEYS = ['onClick', 'defaultOpen'];
 
 /**
  * A simple wrapper for creating Menus wrapped with Button. The props used are a
@@ -182,10 +185,9 @@ export default class MenuButton extends PureComponent {
       transitionName,
       transitionEnterTimeout,
       transitionLeaveTimeout,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.onClick;
-    delete props.defaultOpen;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     const toggle = (
       <Button

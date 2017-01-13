@@ -6,6 +6,7 @@ import isRequiredForA11y from 'react-prop-types/lib/isRequiredForA11y';
 
 import { LEFT, RIGHT, TAB } from '../constants/keyCodes';
 import getField from '../utils/getField';
+import reduceProps from '../utils/reduceProps';
 import isValidClick from '../utils/EventUtils/isValidClick';
 import calculateValueDistance from '../utils/NumberUtils/calculateValueDistance';
 import isWithinStep from '../utils/NumberUtils/isWithinStep';
@@ -13,6 +14,16 @@ import controlled from '../utils/PropTypes/controlled';
 import SliderLabel from './SliderLabel';
 import Track from './Track';
 import TextField from '../TextFields/TextField';
+
+const REMOVED_KEYS = [
+  'value',
+  'onChange',
+  'onDragChange',
+  'discreteInkTransitionTime',
+
+  // deprecated
+  'stepPrecision',
+];
 
 /**
  * The `Slider` component is used to let users select a value from a continuous
@@ -601,7 +612,6 @@ export default class Slider extends PureComponent {
     }
 
     const state = {
-      value,
       active: true,
       distance,
       manualIncrement: false,
@@ -614,8 +624,8 @@ export default class Slider extends PureComponent {
       state.maskInked = false;
     }
 
-    if (typeof this.props.value !== 'undefined') {
-      delete state.value;
+    if (typeof this.props.value === 'undefined') {
+      state.value = value;
     }
 
     this.setState(state);
@@ -900,15 +910,9 @@ export default class Slider extends PureComponent {
       discreteTicks,
       tickWidth,
       valuePrecision,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.value;
-    delete props.onChange;
-    delete props.onDragChange;
-    delete props.discreteInkTransitionTime;
-
-    // delete deprecated
-    delete props.stepPrecision;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     const value = getField(this.props, this.state);
     let rightChildren = rightIcon;

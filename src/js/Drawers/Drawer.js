@@ -4,6 +4,7 @@ import cn from 'classnames';
 
 import { MOBILE_MIN_WIDTH, TABLET_MIN_WIDTH, DESKTOP_MIN_WIDTH } from '../constants/media';
 import getField from '../utils/getField';
+import reduceProps from '../utils/reduceProps';
 import mapToListParts from '../utils/mapToListParts';
 import controlled from '../utils/PropTypes/controlled';
 import Paper from '../Papers/Paper';
@@ -22,6 +23,24 @@ const oneOfDrawerTypes = PropTypes.oneOf([
   DrawerTypes.TEMPORARY,
   DrawerTypes.TEMPORARY_MINI,
 ]);
+
+const REMOVED_KEYS = [
+  'visible',
+  'defaultVisible',
+  'type',
+  'defaultMedia',
+  'mobileType',
+  'mobileMinWidth',
+  'tabletType',
+  'tabletMinWidth',
+  'desktopType',
+  'desktopMinWidth',
+  'transitionDuration',
+  'onVisibilityToggle',
+  'onMediaTypeChange',
+  'closeOnNavItemClick',
+];
+
 
 /**
  * The `Drawer` component is used for having a sliding panel of content or navigation
@@ -411,7 +430,7 @@ export default class Drawer extends PureComponent {
       onVisibilityToggle,
     } = props;
 
-    const state = Drawer.getCurrentMedia(props);
+    let state = Drawer.getCurrentMedia(props);
     const diffType = getField(props, this.state, 'type') !== state.type;
 
     if (onMediaTypeChange && (diffType ||
@@ -421,7 +440,7 @@ export default class Drawer extends PureComponent {
     }
 
     if (typeof props.type !== 'undefined') {
-      delete state.type;
+      state = reduceProps(state, 'type');
     }
 
     const type = getField(props, state, 'type');
@@ -518,22 +537,9 @@ export default class Drawer extends PureComponent {
       overlay,
       autoclose,
       clickableDesktopOverlay,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.visible;
-    delete props.defaultVisible;
-    delete props.type;
-    delete props.defaultMedia;
-    delete props.mobileType;
-    delete props.mobileMinWidth;
-    delete props.tabletType;
-    delete props.tabletMinWidth;
-    delete props.desktopType;
-    delete props.desktopMinWidth;
-    delete props.transitionDuration;
-    delete props.onVisibilityToggle;
-    delete props.onMediaTypeChange;
-    delete props.closeOnNavItemClick;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     const { desktop } = this.state;
     const visible = getField(this.props, this.state, 'visible');

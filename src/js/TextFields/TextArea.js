@@ -1,6 +1,10 @@
 import React, { PureComponent, PropTypes } from 'react';
 import cn from 'classnames';
 
+import reduceProps from '../utils/reduceProps';
+
+const REMOVED_KEYS = ['maxRows', 'onChange', 'onHeightChange'];
+
 /**
  * The `TextArea` component is used to allow a dynamic height for the
  * `textarea`. The height will keep on changing until the maxRows prop
@@ -127,11 +131,9 @@ export default class TextArea extends PureComponent {
       className,
       label,
       block,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.maxRows;
-    delete props.onChange;
-    delete props.onHeightChange;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     return (
       <div

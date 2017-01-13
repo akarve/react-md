@@ -2,7 +2,10 @@ import React, { PureComponent, PropTypes } from 'react';
 import cn from 'classnames';
 import deprecated from 'react-prop-types/lib/deprecated';
 
+import reduceProps from '../utils/reduceProps';
 import FontIcon from '../FontIcons/FontIcon';
+
+const REMOVED_KEYS = ['removeIconChildren', 'removeIconClassName'];
 
 export default class Chip extends PureComponent {
   static propTypes = {
@@ -107,10 +110,9 @@ export default class Chip extends PureComponent {
       remove,
       onClick,
       rotateIcon,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.removeIconChildren;
-    delete props.removeIconClassName;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     let icon;
     if (removable || remove) {

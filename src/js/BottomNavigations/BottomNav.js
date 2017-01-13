@@ -1,9 +1,17 @@
 import React, { PureComponent, PropTypes, Children, isValidElement, cloneElement } from 'react';
 import cn from 'classnames';
 
+import reduceProps from '../utils/reduceProps';
 import AccessibleFakeInkedButton from '../Helpers/AccessibleFakeInkedButton';
 import Collapse from '../Helpers/Collapse';
 import FontIcon from '../FontIcons';
+
+const REMOVED_KEYS = [
+  'index',
+  'label',
+  'onClick',
+  'onNavChange',
+];
 
 /**
  * The `BottomNav` component is used for rendering the navigation tab/link in the `BottomNavigation`
@@ -61,12 +69,9 @@ export default class BottomNav extends PureComponent {
       iconClassName,
       iconChildren,
       colored,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.index;
-    delete props.label;
-    delete props.onClick;
-    delete props.onNavChange;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     let { label } = this.props;
     const labelClassName = cn('md-bottom-nav-label', { 'md-bottom-nav-label--shifting-inactive': !active && !fixed });

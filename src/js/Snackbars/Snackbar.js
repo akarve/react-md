@@ -1,8 +1,18 @@
 import React, { PureComponent, PropTypes } from 'react';
 import cn from 'classnames';
 
+import reduceProps from '../utils/reduceProps';
 import Button from '../Buttons/Button';
 import isInvalidAnimate from './isInvalidAnimate';
+
+const REMOVED_KEYS = [
+  'id',
+  'fab',
+  'onDismiss',
+  'autohide',
+  'autohideTimeout',
+  'leaveTimeout',
+];
 
 export default class Snackbar extends PureComponent {
   static propTypes = {
@@ -131,14 +141,9 @@ export default class Snackbar extends PureComponent {
       className,
       toast,
       multiline,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.id;
-    delete props.fab;
-    delete props.onDismiss;
-    delete props.autohide;
-    delete props.autohideTimeout;
-    delete props.leaveTimeout;
+    const props = reduceProps(remaining, REMOVED_KEYS);
     let { text, action } = toast;
     let { id } = this.props;
 

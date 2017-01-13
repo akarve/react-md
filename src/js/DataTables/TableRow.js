@@ -2,9 +2,12 @@ import React, { Component, PropTypes, Children, cloneElement } from 'react';
 import cn from 'classnames';
 
 import getField from '../utils/getField';
+import reduceProps from '../utils/reduceProps';
 import headerContextTypes from './headerContextTypes';
 import rowContextTypes from './rowContextTypes';
 import TableCheckbox from './TableCheckbox';
+
+const REMOVED_KEYS = ['index', 'autoAdjust'];
 
 /**
  * A component for displaying a row in a `DataTable`. This will
@@ -186,10 +189,9 @@ export default class TableRow extends Component {
       children,
       selected,
       onCheckboxClick,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.index;
-    delete props.autoAdjust;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     let checkbox;
     if (!this.context.plain) {

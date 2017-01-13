@@ -1,9 +1,12 @@
 import React, { PureComponent, PropTypes } from 'react';
 import cn from 'classnames';
 
+import reduceProps from '../utils/reduceProps';
 import SelectField from '../SelectFields/SelectField';
 import TableColumn from './TableColumn';
 import findTable from './findTable';
+
+const REMOVED_KEYS = ['id', 'scrollThreshold'];
 
 /**
  * The `SelectFieldColumn` component is used to render select fields in `DataTable`s.
@@ -203,10 +206,9 @@ export default class SelectFieldColumn extends PureComponent {
       wrapperStyle,
       wrapperClassName,
       header,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.id;
-    delete props.scrollThreshold;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     let { id } = this.props;
     if (!id) {

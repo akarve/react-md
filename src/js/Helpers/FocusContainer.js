@@ -3,10 +3,18 @@ import { findDOMNode } from 'react-dom';
 import invariant from 'invariant';
 
 import isValidFocusKeypress from '../utils/EventUtils/isValidFocusKeypress';
+import reduceProps from '../utils/reduceProps';
 
 const hrefables = ['a', 'area'].map(tag => `${tag}[href],`).join('');
 const disableables = ['button', 'input', 'textarea', 'select'].map(tag => `${tag}:not([disabled]),`).join('');
 const FOCUSABLE_QUERY = `${hrefables}${disableables}*[tabIndex]`;
+
+const REMOVED_KEYS = [
+  'initialFocus',
+  'focusOnMount',
+  'containFocus',
+  'additionalFocusKeys',
+];
 
 /**
  * This component is used for keeping the focus within some container. When the container
@@ -209,11 +217,8 @@ export default class FocusContainer extends PureComponent {
   }
 
   render() {
-    const { component: Component, ...props } = this.props;
-    delete props.initialFocus;
-    delete props.focusOnMount;
-    delete props.containFocus;
-    delete props.additionalFocusKeys;
+    const { component: Component, ...remaining } = this.props;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     return (
       <Component {...props} ref={this._containFocus} />

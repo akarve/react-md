@@ -3,9 +3,12 @@ import CSSTransitionGroup from 'react-addons-css-transition-group';
 import cn from 'classnames';
 
 import TICK from '../constants/CSSTransitionGroupTick';
+import reduceProps from '../utils/reduceProps';
 import oneRequired from '../utils/PropTypes/oneRequired';
 import invalidIf from '../utils/PropTypes/invalidIf';
 import CardTitleBlock from '../Cards/CardTitleBlock';
+
+const REMOVED_KEYS = ['children', 'leftChildren', 'contextualTitle'];
 
 /**
  * The `TableCardHeader` is used when contextual actions should appear when
@@ -185,11 +188,9 @@ export default class TableCardHeader extends PureComponent {
       noChildrenAdjust,
       noLeftChildrenClone,
       visible,
-      ...props
+      ...remaining
     } = this.props;
-    delete props.children;
-    delete props.leftChildren;
-    delete props.contextualTitle;
+    const props = reduceProps(remaining, REMOVED_KEYS);
 
     let { children, leftChildren, contextualTitle } = this.props;
     children = this._cloneCellRight(noChildrenAdjust, children);
