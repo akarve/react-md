@@ -72,10 +72,11 @@ export default class PhoneSizeDemo extends PureComponent {
       toolbarActions,
       toolbarProminent,
       toolbarProminentTitle,
+      /* eslint-disable no-unused-vars */
+      toolbar: toolbarDel, statusBar: statusBarDel,
+      /* eslint-enable no-unused-vars */
       ...props
     } = this.props;
-    delete props.toolbar;
-    delete props.statusBar;
 
     let { toolbar } = this.props;
 

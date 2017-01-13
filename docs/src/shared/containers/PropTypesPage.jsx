@@ -47,14 +47,17 @@ export default class PropTypesPageContainer extends PureComponent {
   }
 
   render() {
-    const { ...props } = this.props;
-    delete props.dispatch;
-    delete props.route;
-    delete props.routes;
-    delete props.routeParams;
-    delete props.router;
-    delete props.params;
-    delete props.location;
+    /* eslint-disable no-unused-vars,react/prop-types */
+    const {
+      dispatch,
+      route,
+      routes,
+      routeParams,
+      router,
+      params,
+      location,
+      ...props
+    } = this.props;
 
     return <PropTypesPage {...props} />;
   }

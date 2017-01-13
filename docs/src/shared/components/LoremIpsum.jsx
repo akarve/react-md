@@ -44,10 +44,15 @@ export default class LoremIpsum extends PureComponent {
 
   render() {
     const { lorem } = this.state;
-    const { component: Component, ...props } = this.props;
-    delete props.count;
-    delete props.units;
-    delete props.paragraphClassName;
+    const {
+      component: Component,
+      /* eslint-disable no-unused-vars */
+      count,
+      units,
+      paragraphClassName,
+      /* eslint-enable no-unused-vars */
+      ...props
+    } = this.props;
 
     return <Component {...props} dangerouslySetInnerHTML={{ __html: lorem }} />;
   }

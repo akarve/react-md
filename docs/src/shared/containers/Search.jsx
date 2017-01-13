@@ -1,17 +1,29 @@
 import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import shallowEqual from 'shallowequal';
+import { connectAdvanced } from 'react-redux';
 
 import { showSearch, hideSearch, search, searchNext } from 'actions/search';
 import Search from 'components/Search';
 
-@connect(({ search }) => ({ ...search }), { search, searchNext, showSearch, hideSearch })
+@connectAdvanced(dispatch => {
+  let result;
+  const actions = bindActionCreators({ search, searchNext, showSearch, hideSearch }, dispatch);
+
+  return ({ search }, props) => {
+    const nextResult = { ...search, ...actions, ...props };
+
+    if (!shallowEqual(result, nextResult)) {
+      result = nextResult;
+    }
+
+    return result;
+  };
+})
 export default class SearchContainer extends PureComponent {
   static propTypes = Search.propTypes;
 
   render() {
-    const { ...props } = this.props;
-    delete props.dispatch;
-
-    return <Search {...props} />;
+    return <Search {...this.props} />;
   }
 }

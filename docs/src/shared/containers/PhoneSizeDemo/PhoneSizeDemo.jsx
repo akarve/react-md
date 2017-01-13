@@ -56,11 +56,8 @@ export default class PhoneSizeDemoContainer extends PureComponent {
       return null;
     }
 
-    const { ...props } = this.props;
-    delete props.mobile;
-    delete props.tablet;
-    delete props.desktop;
-    delete props.dispatch;
+    /* eslint-disable no-unused-vars,react/prop-types */
+    const { mobile, tablet, desktop, dispatch, ...props } = this.props;
     return <Demo {...props} statusBar={statusBar} />;
   }
 }
